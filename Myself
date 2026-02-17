@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: black;
+}
+
+#player {
+  width: 40px;
+  height: 40px;
+  background: lime;
+  position: absolute;
+  left: 100px;
+  top: 100px;
+  border-radius: 8px;
+}
+
+#enemy {
+  width: 40px;
+  height: 40px;
+  background: red;
+  position: absolute;
+  left: 300px;
+  top: 200px;
+  border-radius: 8px;
+}
+
+#score {
+  position: absolute;
+  color: white;
+  font-family: Arial;
+  top: 10px;
+  left: 10px;
+}
+</style>
+</head>
+<body>
+
+<div id="player"></div>
+<div id="enemy"></div>
+<div id="score">Score: 0</div>
+
+<script>
+let player = document.getElementById("player");
+let enemy = document.getElementById("enemy");
+let scoreText = document.getElementById("score");
+
+let x = 100;
+let y = 100;
+let score = 0;
+let speed = 4;
+
+let touchX = null;
+let touchY = null;
+
+document.addEventListener("touchmove", function(e){
+  touchX = e.touches[0].clientX - 20;
+  touchY = e.touches[0].clientY - 20;
+});
+
+function movePlayer() {
+  if (touchX !== null && touchY !== null) {
+    x += (touchX - x) * 0.1;
+    y += (touchY - y) * 0.1;
+  }
+
+  player.style.left = x + "px";
+  player.style.top = y + "px";
+
+  checkCollision();
+  requestAnimationFrame(movePlayer);
+}
+
+function checkCollision() {
+  let px = player.offsetLeft;
+  let py = player.offsetTop;
+  let ex = enemy.offsetLeft;
+  let ey = enemy.offsetTop;
+
+  if (Math.abs(px - ex) < 40 && Math.abs(py - ey) < 40) {
+    score++;
+    scoreText.innerText = "Score: " + score;
+    enemy.style.left = Math.random() * (window.innerWidth - 40) + "px";
+    enemy.style.top = Math.random() * (window.innerHeight - 40) + "px";
+  }
+}
+
+movePlayer();
+</script>
+
+</body>
+</html>
